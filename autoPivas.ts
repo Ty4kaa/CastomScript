@@ -2,7 +2,6 @@ namespace autoPivas {
     export let pavise: ScriptDescription = {};
     let localHero: Hero = null;
     let localPlayer: Player = null;
-    let pivas: Item = null;
     let AllyHeroes: Array<Hero> = [];
     let scriptOk: boolean = false;
     
@@ -14,8 +13,8 @@ namespace autoPivas {
         if (!localHero || !localPlayer){
             return
         }
-        let AllyHeroes = EntitySystem.GetHeroesList()
-        for (let allyHero of AllyHeroes){
+        let heroes = EntitySystem.GetHeroesList()
+        for (let allyHero of heroes){
             if(allyHero.IsSameTeam){
                 AllyHeroes.push(allyHero)
             }
@@ -37,7 +36,7 @@ namespace autoPivas {
             !animation.unit || 
             !animation.unit.IsHero() || 
             animation.unit.IsSameTeam(localHero) ||
-            !animation.sequenceName.startsWith("attack")
+            !animation.sequenceName.includes("attack")
         ) { 
         return};
         let attackHero: Hero = animation.unit as Hero;
@@ -47,14 +46,14 @@ namespace autoPivas {
         if(
             attackTarget &&
             attackTarget.IsHero() &&
-            attackTarget.GetAbsOrigin().Distance(attackAbs) <= attackHero.GetAttackRange() || attackHero.GetAttackRangeBonus()
+            attackTarget.GetAbsOrigin().Distance(attackAbs) <= attackHero.GetAttackRange()
 
         ){}
         else{
             attackTarget = null
             for (let allyHero of AllyHeroes){
                 let allypos = allyHero.GetAbsOrigin();
-                if (allypos.Distance(attackAbs) <= attackHero.GetAttackRange() || attackHero.GetAttackRangeBonus()){
+                if (allypos.Distance(attackAbs) <= attackHero.GetAttackRange()){
                     break;
                 }
             }
@@ -76,14 +75,7 @@ namespace autoPivas {
     }
 
 
-
-
-// }
-//     // pavise.OnUnitAnimation = () => {
-//     //     localHero = EntitySystem.GetLocalHero();
-//     //     localPlayer = EntitySystem.GetLocalPlayer();
-//     //     pivas = localHero.GetItem("item_magic_wand", true)
-//     //     localPlayer.PrepareUnitOrders(Enum.UnitOrder.DOTA_UNIT_ORDER_CAST_TARGET, localHero, localHero.GetAbsOrigin(), pivas, Enum.PlayerOrderIssuer.DOTA_ORDER_ISSUER_HERO_ONLY, localHero,);
+//     localPlayer.PrepareUnitOrders(Enum.UnitOrder.DOTA_UNIT_ORDER_CAST_TARGET, localHero, localHero.GetAbsOrigin(), pivas, Enum.PlayerOrderIssuer.DOTA_ORDER_ISSUER_HERO_ONLY, localHero,);
 
 }
 RegisterScript(autoPivas.pavise)
